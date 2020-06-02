@@ -1,0 +1,14 @@
+{# le template hérite du template base.html.twig à la racine de templates #}
+{% extends 'base.html.twig' %}
+
+{#
+surcharge (remplacement) du bloc title défini dans base.html.twig
+{{ parent() }} reprend le contenu du bloc title défini dans base.html.twig
+à l'endroit où on le place
+#}
+{% block title %}{{ parent() }} - Twig{% endblock %}
+
+{# surcharge (remplacement) du bloc body défini dans base.html.twig #}
+{% block body %}
+
+{% endblock %}
