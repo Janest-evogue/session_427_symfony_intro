@@ -74,13 +74,14 @@ class HttpController extends AbstractController
     public function session(SessionInterface $session)
     {
         // pour ajouter des éléments à la session :
+
         $session->set('prenom', 'Julien');
         $session->set('nom', 'Anest');
 
          // les éléments enregistrés par l'objet Session le sont
         // dans $_SESSION['_sf2_attributes']
         dump($_SESSION);
-
+        var_dump($_SESSION);
         // pour accéder directement aux élément enregistrés
         // par l'objet session
         dump($session->all());
@@ -162,4 +163,34 @@ class HttpController extends AbstractController
      * une nouvelle page qui les affiche et vide la session
      * Dans cette page, si la session est vide, on redirige vers le formulaire
      */
+
+    /**
+     * @Route("/formulaire")
+     */
+    public function formulaire(Request $request, SessionInterface $session)
+    {
+        $erreur = '';
+
+        // si le formulaire en POST a été envoyé
+        if ($request->isMethod('POST')) {
+            // $data contient tout $_POST
+            $data = $request->request->all();
+
+            if (!empty($data['email']) && !empty($data['message'])) {
+                $session->set('email', $data['email']);
+                $session->set('message', $data['message']);
+
+                dump($session->all());
+            } else {
+                $erreur = 'Tous les champs sont obligatoires';
+            }
+        }
+
+        return $this->render(
+            'http/formulaire.html.twig',
+            [
+                'erreur' => $erreur
+            ]
+        );
+    }
 }
