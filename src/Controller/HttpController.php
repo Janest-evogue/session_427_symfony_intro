@@ -177,10 +177,13 @@ class HttpController extends AbstractController
             $data = $request->request->all();
 
             if (!empty($data['email']) && !empty($data['message'])) {
+                // enregistrement en session
                 $session->set('email', $data['email']);
                 $session->set('message', $data['message']);
 
-                dump($session->all());
+                // dump($session->all());
+
+                return $this->redirectToRoute('app_http_affichage');
             } else {
                 $erreur = 'Tous les champs sont obligatoires';
             }
@@ -192,5 +195,40 @@ class HttpController extends AbstractController
                 'erreur' => $erreur
             ]
         );
+    }
+
+    /**
+     * nom de la route : app_http_affichage
+     * @Route("/affichage")
+     */
+    public function affichage(SessionInterface $session)
+    {
+        if (empty($session->all())) {
+            return $this->redirectToRoute('app_http_formulaire');
+        }
+
+        $email = $session->get('email');
+        $message = $session->get('message');
+
+        $session->clear();
+
+        return $this->render(
+            'http/affichage.html.twig',
+            [
+                'email' => $email,
+                'message' => $message
+            ]
+        );
+    }
+
+    /**
+ * @Route("/test")
+ * @return Response
+ */
+    public function test()
+    {
+        phpinfo();
+
+        return new Response('');
     }
 }
